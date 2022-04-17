@@ -1,7 +1,10 @@
+import Order from "./components/Order";
+import "./app.css";
+
 function App() {
   return (
     <div className="App">
-      <h1>kdkwpd</h1>
+      <Order />
     </div>
   );
 }
