@@ -1,7 +1,6 @@
 const Text = () => {
   return (
     <div className="textContainer">
-      <h1></h1>
       <h4>
         Benzinkútból kocsma, kocsmából hangulatos pizzéria. Kis családi
         vállalkozásunk 1996-ban vette át az épületet amely klasszikus helyi
