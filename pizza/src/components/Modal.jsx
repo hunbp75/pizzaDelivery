@@ -9,10 +9,13 @@ const Modal = (props) => {
   const [guest, setGuest] = useState(null);
   const [today, setToday] = useState(null);
   const [todayTime, setTodayTime] = useState(null);
+  const [tableText, setTableText] = useState("");
+  const [count, setCount] = useState();
+  const [closeText, setCloseText] = useState("");
 
-  console.log("The name is: ", name);
-  console.log("The emeail address: ", email);
-  console.log("The email address is: valid? ", valid);
+  //  console.log("The name is: ", name);
+  //  console.log("The emeail address: ", email);
+  //  console.log("The email address is: valid? ", valid);
 
   useEffect(() => {
     let currentDate = new Date();
@@ -57,11 +60,6 @@ const Modal = (props) => {
     if (!valid) {
       return alert("Az Email cím nem valid");
     }
-    props.closeModal();
-  };
-
-  const handleChangeName = (e) => {
-    setName(e.target.value);
   };
 
   const handleChangeEmail = (e) => {
@@ -74,17 +72,23 @@ const Modal = (props) => {
     setEmail(value);
   };
 
-  const handleChangeDate = (e) => {
-    setActualDate(e.target.value);
+  const tableOk = () => {
+    const txt = "A foglalását fogadtuk, Szeretettel várjuk. ";
+    const txt2 = "Az ablak bezárodik: ";
+    setTableText(txt);
+    setCloseText(txt2);
   };
 
-  const handleChangeTime = (e) => {
-    setActualTime(e.target.value);
+  const waitModal = () => {
+    setTimeout(() => {
+      props.closeModal();
+    }, 20000);
   };
 
-  const handleChangeGuest = (e) => {
-    setGuest(e.target.value);
-  };
+  useEffect(() => {
+    const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
+    return () => clearInterval(timer);
+  }, [count]);
 
   return (
     <div>
@@ -109,7 +113,9 @@ const Modal = (props) => {
                 type="text"
                 className="name"
                 placeholder="Név:"
-                onChange={handleChangeName}
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
               />
               <input
                 type="number"
@@ -117,7 +123,9 @@ const Modal = (props) => {
                 placeholder="Vendégek száma:"
                 min="1"
                 max="30"
-                onChange={handleChangeGuest}
+                onChange={(e) => {
+                  setGuest(e.target.value);
+                }}
               />
               <input
                 type="email"
@@ -129,22 +137,46 @@ const Modal = (props) => {
               <div className="dateTime">
                 <div className="date">
                   <h4>A foglalás napja</h4>
-                  <input type="date" id="datebtn" onChange={handleChangeDate} />
+                  <input
+                    type="date"
+                    id="datebtn"
+                    onChange={(e) => {
+                      setActualDate(e.target.value);
+                    }}
+                    min={actualDate}
+                  />
                 </div>
                 <div className="date">
                   <h4>A foglalás időpontja</h4>
                   <input
                     type="time"
                     id="datebtn"
-                    onChange={handleChangeTime}
+                    onChange={(e) => {
+                      setActualTime(e.target.value);
+                    }}
+                    min="16:00"
+                    max="21:00"
                   ></input>
                 </div>
-                );
               </div>
-              <button type="submit" id="submitbtn" onClick={() => sendData()}>
+              <button
+                type="submit"
+                id="submitbtn"
+                onClick={() => {
+                  sendData();
+                  tableOk();
+                  waitModal();
+                  setCount(20);
+                }}
+              >
                 Foglalás
               </button>
             </form>
+            <h4 className="count">{tableText}</h4>
+            <h5 className="count">
+              {closeText}
+              {count}
+            </h5>
           </div>
         </div>
       </div>
